@@ -201,7 +201,6 @@ class GeoJSONWorkerSource extends VectorTileWorkerSource {
                         result.resourceTiming = {};
                         result.resourceTiming[params.source] = JSON.parse(JSON.stringify(resourceTimingData));
                     }
-
                 }
                 callback(null, result);
             }
