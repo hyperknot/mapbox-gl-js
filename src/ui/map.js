@@ -194,6 +194,7 @@ const defaultOptions = {
  * @param {RequestTransformFunction} [options.transformRequest=null] A callback run before the Map makes a request for an external URL. The callback can be used to modify the url, set headers, or set the credentials property for cross-origin requests.
  *   Expected to return an object with a `url` property and optionally `headers` and `credentials` properties.
  * @param {boolean} [options.collectResourceTiming=false] If `true`, Resource Timing API information will be collected for requests made by GeoJSON and Vector Tile web workers (this information is normally inaccessible from the main Javascript thread). Information will be returned in a `resourceTiming` property of relevant `data` events.
+ * @param {number} [options.fadeDuration=300] Controls the duration of the fade-in/fade-out animation for label collisions, in milliseconds. This setting affects all symbol layers. This setting does not affect the duration of runtime styling transitions or raster tile cross-fading.
  * @example
  * var map = new mapboxgl.Map({
  *   container: 'map',
@@ -794,7 +795,7 @@ class Map extends Camera {
      * The `properties` value of each returned feature object contains the properties of its source feature. For GeoJSON sources, only
      * string and numeric property values are supported (i.e. `null`, `Array`, and `Object` values are not supported).
      *
-     * Each feature includes top-level `layer`, `source`, and `sourceLayer` properties. The `layer` property is an object 
+     * Each feature includes top-level `layer`, `source`, and `sourceLayer` properties. The `layer` property is an object
      * representing the style layer to  which the feature belongs. Layout and paint properties in this object contain values
      * which are fully evaluated for the given zoom level and feature.
      *
@@ -1187,6 +1188,16 @@ class Map extends Camera {
     }
 
     /**
+    * Returns an Array of strings containing the names of all sprites/images currently available in the map
+    *
+    * @returns {Array<string>} An Array of strings containing the names of all sprites/images currently available in the map
+    *
+    */
+    listImages() {
+        return this.style.listImages();
+    }
+
+    /**
      * Adds a [Mapbox style layer](https://www.mapbox.com/mapbox-gl-style-spec/#layers)
      * to the map's style.
      *
@@ -1374,12 +1385,12 @@ class Map extends Camera {
 
     /**
      * Sets the state of a feature. The `state` object is merged in with the existing state of the feature.
-     * 
-     * @param {Object} [feature] Feature identifier. Feature objects returned from 
+     *
+     * @param {Object} [feature] Feature identifier. Feature objects returned from
      * {@link Map#queryRenderedFeatures} or event handlers can be used as feature identifiers.
      * @param {string} [feature.source] The Id of the vector source or GeoJSON source for the feature.
      * @param {string} [feature.sourceLayer] (optional)  *For vector tile sources, the sourceLayer is
-     *  required.* 
+     *  required.*
      * @param {string} [feature.id] Unique id of the feature.
      * @param {Object} state A set of key-value pairs. The values should be valid JSON types.
      */
@@ -1390,14 +1401,14 @@ class Map extends Camera {
 
     /**
      * Gets the state of a feature.
-     * 
-     * @param {Object} [feature] Feature identifier. Feature objects returned from 
+     *
+     * @param {Object} [feature] Feature identifier. Feature objects returned from
      * {@link Map#queryRenderedFeatures} or event handlers can be used as feature identifiers.
      * @param {string} [feature.source] The Id of the vector source or GeoJSON source for the feature.
      * @param {string} [feature.sourceLayer] (optional)  *For vector tile sources, the sourceLayer is
-     *  required.* 
+     *  required.*
      * @param {string} [feature.id] Unique id of the feature.
-     * 
+     *
      * @returns {Object} The state of the feature.
      */
     getFeatureState(feature: { source: string; sourceLayer?: string; id: string; }): any {
