@@ -247,6 +247,8 @@ class ScrollZoomHandler {
                 finished = true;
             }
         } else {
+            if (typeof this._targetZoom !== 'number' || !isFinite(this._targetZoom)) return;
+
             tr.zoom = this._targetZoom;
             finished = true;
         }
