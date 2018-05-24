@@ -232,7 +232,11 @@ class ScrollZoomHandler {
         if (this._type === 'wheel') {
             const t = Math.min((browser.now() - this._lastWheelEventTime) / 200, 1);
             const k = this._easing(t);
-            tr.zoom = interpolate(this._startZoom, this._targetZoom, k);
+
+            const z = interpolate(this._startZoom, this._targetZoom, k);
+            if (!Number.isFinite(z)) return;
+            tr.zoom = z;
+
             if (t < 1) {
                 if (!this._frameId) {
                     this._frameId = this._map._requestRenderFrame(this._onScrollFrame);
