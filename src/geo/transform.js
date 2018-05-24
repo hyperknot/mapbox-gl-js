@@ -257,6 +257,11 @@ class Transform {
     }
 
     resize(width: number, height: number) {
+        if (window.captureBreadcrumb) window.captureBreadcrumb('transform.resize', {
+            width: width,
+            height: height,
+        })
+
         this.width = width;
         this.height = height;
 
@@ -551,7 +556,6 @@ class Transform {
         mat4.scale(m, m, [this.width / 2, -this.height / 2, 1]);
         mat4.translate(m, m, [1, -1, 0]);
         this.pixelMatrix = mat4.multiply(new Float64Array(16), m, this.projMatrix);
-
 
 
         // inverse matrix for conversion from screen coordinaes to location
