@@ -552,9 +552,32 @@ class Transform {
         mat4.translate(m, m, [1, -1, 0]);
         this.pixelMatrix = mat4.multiply(new Float64Array(16), m, this.projMatrix);
 
+
+
         // inverse matrix for conversion from screen coordinaes to location
         m = mat4.invert(new Float64Array(16), this.pixelMatrix);
-        if (!m) throw new Error("failed to invert matrix");
+        if (!m) {
+          if (window.captureBreadcrumb) window.captureBreadcrumb('_calcMatrices.1', {
+              width: this.width,
+              height: this.height,
+              _fov: this._fov,
+              _pitch: this._pitch,
+              angle: this.angle,
+              cameraToCenterDistance: this.cameraToCenterDistance,
+              x: this.x,
+              y: this.y,
+              worldSize: this.worldSize,
+              center: this.center,
+
+              projMatrix: this.projMatrix,
+              pixelMatrix: this.pixelMatrix,
+
+              farZ: farZ,
+              verticalScale: verticalScale,
+          })
+
+          throw new Error("failed to invert matrix");
+        }
         this.pixelMatrixInverse = m;
 
         this._posMatrixCache = {};
