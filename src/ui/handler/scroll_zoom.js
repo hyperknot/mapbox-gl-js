@@ -232,13 +232,26 @@ class ScrollZoomHandler {
         if (this._type === 'wheel') {
             const t = Math.min((browser.now() - this._lastWheelEventTime) / 200, 1);
 
-            if (!this._easing) return;
+            if (!this._easing) {
+              if (window.captureBreadcrumb) window.captureBreadcrumb('wheel.3', {
+                _easing: this._easing,
+                _lastWheelEventTime: this._lastWheelEventTime,
+                t: t,
+              })
+              // return;
+            }
             const k = this._easing(t);
 
             const z = interpolate(this._startZoom, this._targetZoom, k);
             if (typeof z !== 'number' || !isFinite(z)) {
-              if (window.captureBreadcrumb) window.captureBreadcrumb('wheel.1', {t:t, k:k, z:z})
-              return;
+              if (window.captureBreadcrumb) window.captureBreadcrumb('wheel.1', {
+                t:t,
+                k:k,
+                z:z,
+                _easing: this._easing,
+                _lastWheelEventTime: this._lastWheelEventTime,
+              })
+              // return;
             }
 
             tr.zoom = z;
@@ -252,8 +265,7 @@ class ScrollZoomHandler {
         } else {
             if (typeof this._targetZoom !== 'number' || !isFinite(this._targetZoom)) {
               if (window.captureBreadcrumb) window.captureBreadcrumb('wheel.2', this._targetZoom)
-
-              return;
+              // return;
             }
 
             tr.zoom = this._targetZoom;
