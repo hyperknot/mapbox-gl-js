@@ -234,7 +234,7 @@ class ScrollZoomHandler {
             const k = this._easing(t);
 
             const z = interpolate(this._startZoom, this._targetZoom, k);
-            if (!Number.isFinite(z)) return;
+            if (typeof z !== 'number' || !isFinite(z)) return;
             tr.zoom = z;
 
             if (t < 1) {
