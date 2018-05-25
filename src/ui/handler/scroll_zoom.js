@@ -245,11 +245,13 @@ class ScrollZoomHandler {
             const z = interpolate(this._startZoom, this._targetZoom, k);
             if (typeof z !== 'number' || !isFinite(z)) {
               if (window.captureBreadcrumb) window.captureBreadcrumb('wheel.1', {
-                t:t,
-                k:k,
-                z:z,
+                t: t,
+                k: k,
+                z: z,
                 _easing: this._easing,
                 _lastWheelEventTime: this._lastWheelEventTime,
+                _startZoom: this._startZoom,
+                _targetZoom: this._targetZoom,
               })
               // return;
             }
