@@ -238,6 +238,7 @@ class ScrollZoomHandler {
                 _lastWheelEventTime: this._lastWheelEventTime,
                 t: t,
               })
+              if (window.captureMessage) window.captureMessage('wheel.no_easing')
               // return;
             }
             const k = this._easing(t);
@@ -253,6 +254,7 @@ class ScrollZoomHandler {
                 _startZoom: this._startZoom,
                 _targetZoom: this._targetZoom,
               })
+              if (window.captureMessage) window.captureMessage('wheel.zoom1')
               // return;
             }
 
@@ -267,6 +269,7 @@ class ScrollZoomHandler {
         } else {
             if (typeof this._targetZoom !== 'number' || !isFinite(this._targetZoom)) {
               if (window.captureBreadcrumb) window.captureBreadcrumb('wheel.2', this._targetZoom)
+              if (window.captureMessage) window.captureMessage('wheel.zoom2')
               // return;
             }
 

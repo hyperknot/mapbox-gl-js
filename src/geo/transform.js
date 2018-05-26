@@ -170,6 +170,7 @@ class Transform {
             minZoom: this.minZoom,
             maxZoom: this.maxZoom,
           })
+          if (window.captureMessage) window.captureMessage('zoom.bad_value')
           return;
         }
 
