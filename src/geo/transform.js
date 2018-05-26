@@ -163,6 +163,16 @@ class Transform {
     get zoom(): number { return this._zoom; }
     set zoom(zoom: number) {
         const z = Math.min(Math.max(zoom, this.minZoom), this.maxZoom);
+
+        if (typeof z !== 'number' || !isFinite(z)) {
+          if (window.captureBreadcrumb) window.captureBreadcrumb('zoom.set', {
+            z: z,
+            minZoom: this.minZoom,
+            maxZoom: this.maxZoom,
+          })
+          return;
+        }
+
         if (this._zoom === z) return;
         this._unmodified = false;
         this._zoom = z;
