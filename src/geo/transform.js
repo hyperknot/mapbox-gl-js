@@ -165,7 +165,8 @@ class Transform {
         const z = Math.min(Math.max(zoom, this.minZoom), this.maxZoom);
 
         if (typeof z !== 'number' || !isFinite(z)) {
-          if (window.captureBreadcrumb) window.captureBreadcrumb('zoom.set', {
+          if (window.captureBreadcrumb) window.captureBreadcrumb('zoom.bad_value', {
+            zoom: zoom,
             z: z,
             minZoom: this.minZoom,
             maxZoom: this.maxZoom,
