@@ -268,7 +268,7 @@ class Transform {
 
     resize(width: number, height: number) {
         if (window.captureBreadcrumb) window.captureBreadcrumb(`transform.resize: ` +
-          `width: ${width}, `
+          `width: ${width}, ` +
           `height: ${height}`)
 
         this.width = width;
