@@ -267,10 +267,9 @@ class Transform {
     }
 
     resize(width: number, height: number) {
-        if (window.captureBreadcrumb) window.captureBreadcrumb('transform.resize', {
-            width: width,
-            height: height,
-        })
+        if (window.captureBreadcrumb) window.captureBreadcrumb(`transform.resize: ` +
+          `width: ${width}, `
+          `height: ${height}`)
 
         this.width = width;
         this.height = height;
@@ -571,24 +570,23 @@ class Transform {
         // inverse matrix for conversion from screen coordinaes to location
         m = mat4.invert(new Float64Array(16), this.pixelMatrix);
         if (!m) {
-          if (window.captureBreadcrumb) window.captureBreadcrumb('_calcMatrices.1', {
-              width: this.width,
-              height: this.height,
-              _fov: this._fov,
-              _pitch: this._pitch,
-              angle: this.angle,
-              cameraToCenterDistance: this.cameraToCenterDistance,
-              x: this.x,
-              y: this.y,
-              worldSize: this.worldSize,
-              center: this.center,
+          if (window.captureMessage) window.captureMessage(`calcMatrices.1: ` +
+            `width: ${this.width}, ` +
+            `height: ${this.height}, ` +
+            `_fov: ${this._fov}, ` +
+            `_pitch: ${this._pitch}, ` +
+            `angle: ${this.angle}, ` +
+            `cameraToCenterDistance: ${this.cameraToCenterDistance}, ` +
+            `x: ${this.x}, ` +
+            `y: ${this.y}, ` +
+            `worldSize: ${this.worldSize}, ` +
+            `center: ${this.center}, ` +
 
-              projMatrix: this.projMatrix,
-              pixelMatrix: this.pixelMatrix,
+            `projMatrix: ${this.projMatrix}, ` +
+            `pixelMatrix: ${this.pixelMatrix}, ` +
 
-              farZ: farZ,
-              verticalScale: verticalScale,
-          })
+            `farZ: ${farZ}, ` +
+            `verticalScale: ${verticalScale}`)
 
           throw new Error("failed to invert matrix");
         }
