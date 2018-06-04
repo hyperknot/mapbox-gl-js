@@ -233,28 +233,24 @@ class ScrollZoomHandler {
             const t = Math.min((browser.now() - this._lastWheelEventTime) / 200, 1);
 
             if (!this._easing) {
-              if (window.captureBreadcrumb) window.captureBreadcrumb('wheel.no_easing', {
-                _easing: this._easing,
-                _lastWheelEventTime: this._lastWheelEventTime,
-                t: t,
-              })
-              if (window.captureMessage) window.captureMessage('wheel.no_easing')
+              if (window.captureMessage) window.captureMessage(`wheel.no_easing: ` +
+                `_easing: ${this._easing}, ` +
+                `_lastWheelEventTime: ${this._lastWheelEventTime}, ` +
+                `t: ${t}`)
               // return;
             }
             const k = this._easing(t);
 
             const z = interpolate(this._startZoom, this._targetZoom, k);
             if (typeof z !== 'number' || !isFinite(z)) {
-              if (window.captureBreadcrumb) window.captureBreadcrumb('wheel.zoom1', {
-                t: t,
-                k: k,
-                z: z,
-                _easing: this._easing,
-                _lastWheelEventTime: this._lastWheelEventTime,
-                _startZoom: this._startZoom,
-                _targetZoom: this._targetZoom,
-              })
-              if (window.captureMessage) window.captureMessage('wheel.zoom1')
+              if (window.captureMessage) window.captureMessage(`wheel.zoom1: ` +
+                `t: ${t}, ` +
+                `k: ${k}, ` +
+                `z: ${z}, ` +
+                `_easing: ${this._easing}, ` +
+                `_lastWheelEventTime: ${this._lastWheelEventTime}, ` +
+                `_startZoom: ${this._startZoom}, ` +
+                `_targetZoom: ${this._targetZoom}`)
               // return;
             }
 
