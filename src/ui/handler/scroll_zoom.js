@@ -264,10 +264,8 @@ class ScrollZoomHandler {
             }
         } else {
             if (typeof this._targetZoom !== 'number' || !isFinite(this._targetZoom)) {
-              if (window.captureBreadcrumb) window.captureBreadcrumb('wheel.zoom2', {
-                _targetZoom: this._targetZoom,
-              })
-              if (window.captureMessage) window.captureMessage('wheel.zoom2')
+              if (window.captureMessage) window.captureMessage(`wheel.zoom2: ` +
+                `_targetZoom: ${this._targetZoom}`)
               // return;
             }
 
