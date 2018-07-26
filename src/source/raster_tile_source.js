@@ -34,6 +34,7 @@ class RasterTileSource extends Evented implements Source {
     tiles: Array<string>;
 
     _loaded: boolean;
+    _avoidXHR: boolean;
     _options: RasterSourceSpecification | RasterDEMSourceSpecification;
     _tileJSONRequest: ?Cancelable;
 
@@ -52,6 +53,7 @@ class RasterTileSource extends Evented implements Source {
         this._loaded = false;
 
         this._options = extend({}, options);
+        this._avoidXHR = false;
         extend(this, pick(options, ['url', 'scheme', 'tileSize']));
     }
 
@@ -110,25 +112,36 @@ class RasterTileSource extends Evented implements Source {
                 delete (img: any).cacheControl;
                 delete (img: any).expires;
 
-                const context = this.map.painter.context;
-                const gl = context.gl;
-                tile.texture = this.map.painter.getTileTexture(img.width);
-                if (tile.texture) {
-                    tile.texture.update(img, { useMipmap: true });
-                } else {
-                    tile.texture = new Texture(context, img, gl.RGBA, { useMipmap: true });
-                    tile.texture.bind(gl.LINEAR, gl.CLAMP_TO_EDGE, gl.LINEAR_MIPMAP_NEAREST);
-
-                    if (context.extTextureFilterAnisotropic) {
-                        gl.texParameterf(gl.TEXTURE_2D, context.extTextureFilterAnisotropic.TEXTURE_MAX_ANISOTROPY_EXT, context.extTextureFilterAnisotropicMax);
-                    }
+                // if the tiles have aggressive caching (retained for at least 1 hour),
+                // switch to faster image loading technique for subsequent tile loads
+                const timeout = tile.getExpiryTimeout();
+                if (timeout === undefined || timeout > 1000 * 60 * 60) {
+                    this._avoidXHR = true;
                 }
 
-                tile.state = 'loaded';
-
-                callback(null);
+                this.onTileLoad(tile, img, callback);
             }
-        });
+        }, this._avoidXHR);
+    }
+
+    onTileLoad(tile: Tile, img: HTMLImageElement, callback: Callback<void>) {
+        const context = this.map.painter.context;
+        const gl = context.gl;
+        tile.texture = this.map.painter.getTileTexture(img.width);
+        if (tile.texture) {
+            tile.texture.update(img, { useMipmap: true });
+        } else {
+            tile.texture = new Texture(context, img, gl.RGBA, { useMipmap: true });
+            tile.texture.bind(gl.LINEAR, gl.CLAMP_TO_EDGE, gl.LINEAR_MIPMAP_NEAREST);
+
+            if (context.extTextureFilterAnisotropic) {
+                gl.texParameterf(gl.TEXTURE_2D, context.extTextureFilterAnisotropic.TEXTURE_MAX_ANISOTROPY_EXT, context.extTextureFilterAnisotropicMax);
+            }
+        }
+
+        tile.state = 'loaded';
+
+        callback(null);
     }
 
     abortTile(tile: Tile, callback: Callback<void>) {
